@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\DependencyInjection\Compiler\DoctrineMetadataCachePass;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;
@@ -14,6 +15,13 @@ class Kernel extends BaseKernel
     use MicroKernelTrait;
 
     private const CONFIG_EXTS = '.{php,xml,yaml,yml}';
+
+    public function build(ContainerBuilder $container): void
+    {
+        if ($_SERVER['APP_ENV'] === 'prod_new') {
+            $container->addCompilerPass(new DoctrineMetadataCachePass());
+        }
+    }
 
     public function registerBundles(): iterable
     {

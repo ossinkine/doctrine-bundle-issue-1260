@@ -21,7 +21,8 @@ if ($trustedHosts = $_SERVER['TRUSTED_HOSTS'] ?? false) {
 }
 
 $kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
-$request = Request::createFromGlobals();
-$response = $kernel->handle($request);
-$response->send();
-$kernel->terminate($request, $response);
+$kernel->boot();
+
+/** @var \Doctrine\ORM\EntityManagerInterface $em */
+$em = $kernel->getContainer()->get('doctrine.orm.default_entity_manager');
+var_dump(count($em->getMetadataFactory()->getAllMetadata()));
